@@ -1,0 +1,78 @@
+
+{% extends "base.html" %}
+
+{% block title %}Chamados de Suporte{% endblock %}
+
+{% block content %}
+
+<div class="cabecalho-pagina">
+    <div>
+        <p class="etiqueta">CENTRAL DE ATENDIMENTO</p>
+        <h1>Chamados de suporte</h1>
+        <p class="subtitulo">Consulte e acompanhe as solicitações.</p>
+    </div>
+
+    <a class="botao" href="{{ url_for('novo_chamado') }}">
+        + Novo chamado
+    </a>
+</div>
+
+<section class="painel">
+
+    {% if chamados %}
+
+    <div class="tabela-responsiva">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nº</th>
+                    <th>Solicitante</th>
+                    <th>Equipamento</th>
+                    <th>Categoria</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for c in chamados %}
+                <tr>
+                    <td>#{{ c.id }}</td>
+                    <td>{{ c.solicitante }}</td>
+                    <td>{{ c.equipamento }}</td>
+                    <td>{{ c.categoria }}</td>
+
+                    <td>
+                        <span class="status">
+                            {{ c.status }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <a class="link"
+                           href="{{ url_for('detalhe_chamado', chamado_id=c.id) }}">
+                            Detalhes →
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+
+    <div class="vazio">
+        <h2>Nenhum chamado cadastrado</h2>
+        <p>Cadastre a primeira solicitação para começar.</p>
+
+        <a class="botao" href="{{ url_for('novo_chamado') }}">
+            Cadastrar chamado
+        </a>
+    </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

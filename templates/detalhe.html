@@ -1,0 +1,173 @@
+
+{% extends "base.html" %}
+
+{% block title %}Chamado #{{ chamado.id }}{% endblock %}
+
+{% block content %}
+
+<div class="cabecalho-pagina">
+    <div>
+        <p class="etiqueta">DETALHES DA SOLICITAÇÃO</p>
+        <h1>Chamado #{{ chamado.id }}</h1>
+        <p class="subtitulo">
+            Criado em {{ chamado.criado_em }}
+        </p>
+    </div>
+
+    <a class="botao secundario" href="{{ url_for('index') }}">
+        ← Voltar
+    </a>
+</div>
+
+<section class="painel">
+
+    <div class="detalhes-grid">
+
+        <div>
+            <small>Solicitante</small>
+            <strong>{{ chamado.solicitante }}</strong>
+        </div>
+
+        <div>
+            <small>Equipamento</small>
+            <strong>{{ chamado.equipamento }}</strong>
+        </div>
+
+        <div>
+            <small>Categoria</small>
+            <strong>{{ chamado.categoria }}</strong>
+        </div>
+
+        <div>
+            <small>Status atual</small>
+            <strong>{{ chamado.status }}</strong>
+        </div>
+
+    </div>
+
+    <div class="descricao">
+        <small>Descrição do problema</small>
+        <p>{{ chamado.descricao }}</p>
+    </div>
+
+</section>
+
+<div class="duas-colunas">
+
+    <section class="painel">
+
+        <h2>Atualizar status</h2>
+
+        <form method="POST"
+              action="{{ url_for('alterar_status', chamado_id=chamado.id) }}"
+              class="formulario">
+
+            <label>
+                Novo status
+
+                <select name="status">
+
+                    <option {% if chamado.status == 'Aberto' %}selected{% endif %}>
+                        Aberto
+                    </option>
+
+                    <option {% if chamado.status == 'Em andamento' %}selected{% endif %}>
+                        Em andamento
+                    </option>
+
+                    <option {% if chamado.status == 'Concluído' %}selected{% endif %}>
+                        Concluído
+                    </option>
+
+                </select>
+            </label>
+
+            <label>
+                Responsável
+                <input name="responsavel" placeholder="Nome do técnico">
+            </label>
+
+            <label>
+                Observações
+                <textarea name="observacoes" rows="3"></textarea>
+            </label>
+
+            <button class="botao" type="submit">
+                Atualizar e registrar
+            </button>
+
+        </form>
+
+    </section>
+
+    <section class="painel">
+
+        <h2>Adicionar comentário</h2>
+
+        <form method="POST"
+              action="{{ url_for('adicionar_comentario', chamado_id=chamado.id) }}"
+              class="formulario">
+
+            <label>
+                Responsável
+                <input name="responsavel" required>
+            </label>
+
+            <label>
+                Comentário
+                <textarea name="comentario" rows="5" required></textarea>
+            </label>
+
+            <button class="botao" type="submit">
+                Salvar comentário
+            </button>
+
+        </form>
+
+    </section>
+
+</div>
+
+<section class="painel historico">
+
+    <p class="etiqueta">MONGODB</p>
+    <h2>Histórico de atendimento</h2>
+
+    {% if historico %}
+
+        {% for item in historico %}
+
+        <article class="evento">
+
+            <div class="bolinha"></div>
+
+            <div>
+
+                <div class="evento-topo">
+                    <strong>{{ item.acao }}</strong>
+                    <time>{{ item.data }}</time>
+                </div>
+
+                <p>{{ item.observacoes }}</p>
+
+                <small>
+                    Responsável: {{ item.responsavel }}
+                </small>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p class="subtitulo">
+            Ainda não existem movimentações.
+        </p>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}
